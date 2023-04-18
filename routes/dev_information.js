@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { setResponse } = require("./utils");
 
-const arr = [
+let arr = [
   {
     id: 1,
     name: "Shuja Ur Rehman",
@@ -42,6 +42,31 @@ const arr = [
 
 router.get("/", (req, res) => {
   return setResponse(res, null, arr, 200);
+});
+
+router.get("/:id", (req, res) => {
+  return setResponse(res, null, arr[parseInt(req.params.id) - 1], 200);
+});
+
+router.post("/", (req, res) => {
+  const { name, field, email, phone, about } = req.body;
+  arr.push({ id: arr.length + 1, name, field, email, phone, about });
+  setResponse(res, "New user created", null, 201);
+});
+
+router.put("/:id", (req, res) => {
+  const { name, field, email, phone, about } = req.body;
+  arr.map((item, index) => {
+    if (item.id == req.params.id) {
+      arr[index] = { id: req.params.id, name, field, email, phone, about };
+    }
+  });
+  return setResponse(res, "Data updated", null, 200);
+});
+
+router.delete("/:id", (req, res) => {
+  arr = arr.filter((i) => i.id != req.params.id);
+  return setResponse(res, "data deleted", null, 200);
 });
 
 module.exports = router;

@@ -30,7 +30,7 @@ const arr =[
 ];
 
 router.get("/", (req, res) =>{
-    return setResponse(res,null,arr,200)
+    return setResponse(res,null,arr,200);
 });
 
 module.exports = router;
