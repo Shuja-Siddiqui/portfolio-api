@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const routes = require("./routes");
+const route = require("./routes/index");
 
 require("dotenv").config();
 const PORT = process.env.PORT || 5000;
@@ -9,12 +9,16 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+
 app.get("/", (req, res) => {
-  res.send("Hello");
+  res.send("Successful");
 });
 
-app.use("/api", routes);
+app.use(route);
 
 app.listen(PORT, () => {
   console.log(`Server Started: http://localhost:${PORT}`);
 });
+
+
+// mongodb+srv://ShujaUrRehman:<password>@portfolio.s7bz7a9.mongodb.net/?retryWrites=true&w=majority

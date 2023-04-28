@@ -1,12 +1,16 @@
-const router = require("express").Router();
-const dev = require("./dev_information");
-const service = require("./services");
-const projects = require("./projects");
-const testimonials = require("./testimonials");
+const route = require("express").Router();
+const user_info = require("./user_info");
+const developer_info = require("./developer_info");
+const service = require("./service");
+const project = require("./project");
+const testimonial = require("./testimonial");
 
-router.use("/dev_information", dev);
-router.use("/services", service);
-router.use("/projects", projects); 
-router.use("/testimonials", testimonials);
 
-module.exports = router;
+route.use("/user_info", user_info);
+route.use("/developer_info", developer_info);
+route.use("/service", service);
+route.use("/project", project);
+route.use("/testimonial", testimonial);
+
+
+module.exports = route;
