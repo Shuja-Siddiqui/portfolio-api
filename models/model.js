@@ -1,5 +1,18 @@
-const mongoose = require("mangoose");
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const oid = mongoose.Types.ObjectId;
+
+
+const userSchema = Schema({
+    username:{
+        type: String,
+        required: true,
+    },
+    password:{
+        type: String,
+        required: true,
+    }
+})
 
 const developerSchema = Schema({
     name:{
@@ -22,6 +35,10 @@ const developerSchema = Schema({
         type: String,
         required: true,
     },
+    user_id:{
+        type: oid,
+        required: true,
+    }
 });
 
 const serviceSchema = Schema({
@@ -33,6 +50,10 @@ const serviceSchema = Schema({
         type: String,
         required: true,
     },
+    user_id:{
+        type: oid,
+        required: true,
+    }
 });
 
 const projectSchema = Schema({
@@ -48,6 +69,10 @@ const projectSchema = Schema({
         type: String,
         required: true,
     },
+    user_id:{
+        type: oid,
+        required: true,
+    }
 });
 
 const testimonialSchema = Schema({
@@ -67,16 +92,22 @@ const testimonialSchema = Schema({
         type: String,
         required: true,
     },
+    user_id:{
+        type: oid,
+        required: true,
+    }
 });
 
 
 
+const UserInfo = mongoose.model("UserInfo", userSchema);
 const DeveloperInfo = mongoose.model("DeveloperInfo", developerSchema);
 const Service = mongoose.model("Service", serviceSchema);
 const Project = mongoose.model("Project", projectSchema);
 const Testimonial = mongoose.model("Testimonial", testimonialSchema);
 
 module.exports = {
+    UserInfo,
     DeveloperInfo,
     Service,
     Project,
