@@ -100,12 +100,14 @@ const testimonialSchema = Schema({
 
 
 
+const UserInfo = mongoose.model("UserInfo", userSchema);
 const DeveloperInfo = mongoose.model("DeveloperInfo", developerSchema);
 const Service = mongoose.model("Service", serviceSchema);
 const Project = mongoose.model("Project", projectSchema);
 const Testimonial = mongoose.model("Testimonial", testimonialSchema);
 
 module.exports = {
+    UserInfo,
     DeveloperInfo,
     Service,
     Project,
