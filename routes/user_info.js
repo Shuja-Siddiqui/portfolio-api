@@ -1,35 +1,25 @@
 const route = require("express").Router();
 const { setResponse } = require("../utils");
-const data = require("./data");
+const { UserInfo } = require("../models/model");
 
 
-route.get("/:id", (req, res) => {
-  try {
-    return setResponse(res, null, data[parseInt(req.params.id)], 200);
-  } catch {
-    return setResponse(res, "Internal Server Error", null, 500);
-  }
-});
+// route.get("/:id", async(req, res) => {
+//   try {
+//     const users = await UserInfo.findOne({_id: req.params.id});
+//     return setResponse(res, null, users, 200);
+//   } catch {
+//     return setResponse(res, "Internal Server Error", null, 500);
+//   }
+// });
 
-route.post("/login/", (req, res) => {
+route.post("/login/", async (req, res) => {
   try {
     const { username, password } = req.body;
-    let userFound = false;
-    let userIndex = -1;
-    data.map((item, index) => {
-      if (
-        item.user_info.username === username &&
-        item.user_info.password == password
-      ) {
-        userFound = true;
-        userIndex = index;
-      }
-    });
-    if (!userFound) {
+    const users = await UserInfo.findOne({username, password});
+    if (!users) {
       return setResponse(res, "username/password incorrect", null, 404);
     }
-
-    return setResponse(res, "Login Successfull", data[userIndex], 200);
+    return setResponse(res, "Login Successfull", users, 200);
   } catch {
     return setResponse(res, "Internal Server Error", null, 500);
   }

@@ -1,72 +1,70 @@
 const route = require("express").Router();
 const { setResponse } = require("../utils");
-const data = require("./data");
+const auth = require("../middlewares/authentication");
+const { Service } = require("../models/model");
+const ObjectId = require("mongoose").Types.ObjectId;
 
+route.get("/:uid", async (req, res) => {
+  try {
+    const service = await Service.find({ user_id: req.params.uid });
+    return setResponse(res, null, service, 200);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-route.get("/:uid", (req, res) => {
-    try {
-      return setResponse(res, null, data[parseInt(req.params.uid)].services, 200);
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
-  
-  route.get("/:uid/:id", (req, res) => {
-    try {
-      return setResponse(
-        res,
-        null,
-        data[parseInt(req.params.uid)].services[parseInt(req.params.id)],
-        200
-      );
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+route.get("/single-service/:id", async (req, res) => {
+  try {
+    const service = await Service.findOne({ _id: req.params.id });
+    return setResponse(res, null, service, 200);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  route.post("/:uid", (req, res) => {
-    try {
-      const { name, description } = req.body;
-      data[parseInt(req.params.uid)].services.push({
-        _id: data[parseInt(req.params.uid)].services.length + 1,
-        name,
-        description,
-      });
-      return setResponse(res, "new", null, 201);
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+route.post("/:uid", async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    const uid = new ObjectId(req.params.uid);
+    const service = new Service({
+      name,
+      description,
+      user_id: uid,
+    });
+    const response = await service.save();
+    return setResponse(res, "new", response, 201);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  route.put("/:uid/:id", (req, res) => {
-    try {
-      const { name, description } = req.body;
-      if (!name || !description) {
-        return setResponse(res, "All fields are required", null, 405);
+route.put("/:id", async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    const id = new ObjectId(req.params.id);
+    const service = await Service.updateOne(
+      { _id: id },
+      {
+        $set: { name, description },
       }
-      const { _id } =
-        data[parseInt(req.params.uid)].services[parseInt(req.params.id)];
-      data[parseInt(req.params.uid)].services[parseInt(req.params.id)] = {
-        _id,
-        name,
-        description,
-      };
+    );
+    if (service && service.matchedCount > 0)
       return setResponse(res, "Data updated", null, 200);
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+    return setResponse(res, "service not found", null, 404);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  route.delete("/:uid/:id", (req, res) => {
-    try {
-      data[parseInt(req.params.uid)].services = data[
-        parseInt(req.params.uid)
-      ].services.filter((item) => item._id != parseInt(req.params.id));
-      return setResponse(res, "data deleted", null, 200);
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+route.delete("/:id", async (req, res) => {
+  try {
+    const service = await Service.deleteOne({ _id: req.params.id });
+    if (service && service.deletedCount > 0)
+      return setResponse(res, "Service deleted", null, 200);
+    return setResponse(res, "Service not found", null, 404);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  module.exports = route;
-  
+module.exports = route;
