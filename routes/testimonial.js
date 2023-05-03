@@ -1,80 +1,72 @@
 const route = require("express").Router();
 const { setResponse } = require("../utils");
-const data = require("./data");
+const { Testimonial } = require("../models/model");
+const auth = require("../middlewares/authentication");
+const ObjectId = require("mongoose").Types.ObjectId;
 
+route.get("/:uid", async (req, res) => {
+  try {
+    const testimonial = await Testimonial.find({ user_id: req.params.uid });
+    return setResponse(res, null, testimonial, 200);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-route.get("/:uid", (req, res) => {
-    try {
-      return setResponse(
-        res,
-        null,
-        data[parseInt(req.params.uid)].testimonials,
-        200
-      );
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
-  
-  route.get("/:uid/:id", (req, res) => {
-    try {
-      return setResponse(
-        res,
-        null,
-        data[parseInt(req.params.uid)].testimonials[parseInt(req.params.id)],
-        200
-      );
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+route.get("/:id", async (req, res) => {
+  try {
+    const testimonial = await Testimonial.findOne({ _id: req.params.id });
+    return setResponse(res, null, testimonial, 200);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  route.post("/:uid", (req, res) => {
-    try {
-      const { client_name, review, stars, field } = req.body;
-      data[parseInt(req.params.uid)].testimonials.push({
-        _id: data[parseInt(req.params.uid)].testimonials.length + 1,
-        client_name,
-        review,
-        stars,
-        field,
-      });
-      return setResponse(res, "new", null, 201);
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+route.post("/:uid", async (req, res) => {
+  try {
+    const { client_name, review, stars, field } = req.body;
+    const uid = new ObjectId(req.params.uid);
+    const testimonial = new Testimonial({
+      client_name,
+      review,
+      stars,
+      field,
+      user_id: uid,
+    });
+    const response = await testimonial.save();
+    return setResponse(res, "new", response, 201);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  route.put("/:uid/:id", (req, res) => {
-    try {
-      const { client_name, review, stars, field } = req.body;
-      if (!client_name || !review || !stars || !field) {
-        return setResponse(res, "All fields are required", null, 405);
+route.put("/:id", async (req, res) => {
+  try {
+    const { client_name, review, stars, field } = req.body;
+    const id = new ObjectId(req.params.id);
+    const testimonial = await Testimonial.updateOne(
+      { _id: id },
+      {
+        $set: { client_name, review, stars, field },
       }
-      const { _id } =
-        data[parseInt(req.params.uid)].testimonials[parseInt(req.params.id)];
-      data[parseInt(req.params.uid)].testimonials[parseInt(req.params.id)] = {
-        _id,
-        client_name,
-        review,
-        stars,
-        field,
-      };
+    );
+    if (testimonial && testimonial.matchedCount > 0)
       return setResponse(res, "Data updated", null, 200);
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+    return setResponse(res, "Testimonial not found", null, 404);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  route.delete("/:uid/:id", (req, res) => {
-    try {
-      data[parseInt(req.params.uid)].testimonials = data[
-        parseInt(req.params.uid)
-      ].testimonials.filter((items) => items._id != parseInt(req.params.id));
+route.delete("/:id", async (req, res) => {
+  try {
+    const testimonial = await Testimonial.deleteOne({ _id: req.params.id });
+    if (testimonial && testimonial.deletedCount > 0)
       return setResponse(res, "Data Deleted", null, 500);
-    } catch {
-      return setResponse(res, "Internal Server Error", null, 500);
-    }
-  });
+    return setResponse(res, "Testimonial not found", null, 404);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
 
-  module.exports = route;
+module.exports = route;
