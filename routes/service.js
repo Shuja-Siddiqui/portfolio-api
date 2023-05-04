@@ -4,7 +4,7 @@ const auth = require("../middlewares/authentication");
 const { Service } = require("../models/model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-route.get("/:uid", async (req, res) => {
+route.get("/:uid", auth, async (req, res) => {
   try {
     const service = await Service.find({ user_id: req.params.uid });
     return setResponse(res, null, service, 200);
@@ -13,7 +13,7 @@ route.get("/:uid", async (req, res) => {
   }
 });
 
-route.get("/single-service/:id", async (req, res) => {
+route.get("/single-service/:id", auth, async (req, res) => {
   try {
     const service = await Service.findOne({ _id: req.params.id });
     return setResponse(res, null, service, 200);
@@ -22,7 +22,7 @@ route.get("/single-service/:id", async (req, res) => {
   }
 });
 
-route.post("/:uid", async (req, res) => {
+route.post("/:uid", auth, async (req, res) => {
   try {
     const { name, description } = req.body;
     const uid = new ObjectId(req.params.uid);
@@ -38,7 +38,7 @@ route.post("/:uid", async (req, res) => {
   }
 });
 
-route.put("/:id", async (req, res) => {
+route.put("/:id", auth, async (req, res) => {
   try {
     const { name, description } = req.body;
     const id = new ObjectId(req.params.id);
@@ -56,7 +56,7 @@ route.put("/:id", async (req, res) => {
   }
 });
 
-route.delete("/:id", async (req, res) => {
+route.delete("/:id", auth, async (req, res) => {
   try {
     const service = await Service.deleteOne({ _id: req.params.id });
     if (service && service.deletedCount > 0)

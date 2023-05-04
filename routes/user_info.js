@@ -1,9 +1,10 @@
 const route = require("express").Router();
 const { setResponse } = require("../utils");
 const { UserInfo } = require("../models/model");
+const auth = require("../middlewares/authentication");
 
 
-// route.get("/:id", async(req, res) => {
+// route.get("/:id", auth, async(req, res) => {
 //   try {
 //     const users = await UserInfo.findOne({_id: req.params.id});
 //     return setResponse(res, null, users, 200);
@@ -12,7 +13,7 @@ const { UserInfo } = require("../models/model");
 //   }
 // });
 
-route.post("/login/", async (req, res) => {
+route.post("/login/", auth, async (req, res) => {
   try {
     const { username, password } = req.body;
     const users = await UserInfo.findOne({username, password});
