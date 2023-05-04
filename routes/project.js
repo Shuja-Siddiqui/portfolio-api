@@ -4,7 +4,7 @@ const { Project } = require("../models/model");
 const auth = require("../middlewares/authentication");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-route.get("/:uid", async (req, res) => {
+route.get("/:uid", auth, async (req, res) => {
   try {
     const project = await Project.find({ user_id: req.params.uid });
     return setResponse(res, null, project, 200);
@@ -13,7 +13,7 @@ route.get("/:uid", async (req, res) => {
   }
 });
 
-route.get("/single-project/:id", async (req, res) => {
+route.get("/single-project/:id", auth, async (req, res) => {
   try {
     const project = await Project.findOne({ _id: req.params.id });
     return setResponse(res, null, project, 200);
@@ -22,7 +22,7 @@ route.get("/single-project/:id", async (req, res) => {
   }
 });
 
-route.post("/:uid", async (req, res) => {
+route.post("/:uid", auth, async (req, res) => {
   try {
     const { project_name, description, link } = req.body;
     const uid = new ObjectId(req.params.uid);
@@ -40,7 +40,7 @@ route.post("/:uid", async (req, res) => {
   }
 });
 
-route.put("/:id", async (req, res) => {
+route.put("/:id", auth, async (req, res) => {
   try {
     const { project_name, description, link } = req.body;
     const id = new ObjectId(req.params.id);
@@ -58,7 +58,7 @@ route.put("/:id", async (req, res) => {
   }
 });
 
-route.delete("/:id", async (req, res) => {
+route.delete("/:id", auth, async (req, res) => {
   try {
     const project = await Project.deleteOne({ _id: req.params.id });
     if (project && project.deletedCount > 0)
