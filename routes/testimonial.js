@@ -4,7 +4,7 @@ const { Testimonial } = require("../models/model");
 const auth = require("../middlewares/authentication");
 const ObjectId = require("mongoose").Types.ObjectId;
 
-route.get("/:uid", auth, async (req, res) => {
+route.get("/:uid",  async (req, res) => {
   try {
     const testimonial = await Testimonial.find({ user_id: req.params.uid });
     return setResponse(res, null, testimonial, 200);
@@ -13,7 +13,7 @@ route.get("/:uid", auth, async (req, res) => {
   }
 });
 
-route.get("/:id", auth, async (req, res) => {
+route.get("/:id",  async (req, res) => {
   try {
     const testimonial = await Testimonial.findOne({ _id: req.params.id });
     return setResponse(res, null, testimonial, 200);
@@ -22,7 +22,7 @@ route.get("/:id", auth, async (req, res) => {
   }
 });
 
-route.post("/:uid", auth, async (req, res) => {
+route.post("/:uid",  async (req, res) => {
   try {
     const { client_name, review, stars, field } = req.body;
     const uid = new ObjectId(req.params.uid);
@@ -40,7 +40,7 @@ route.post("/:uid", auth, async (req, res) => {
   }
 });
 
-route.put("/:id", auth, async (req, res) => {
+route.put("/:id",  async (req, res) => {
   try {
     const { client_name, review, stars, field } = req.body;
     const id = new ObjectId(req.params.id);
@@ -58,7 +58,7 @@ route.put("/:id", auth, async (req, res) => {
   }
 });
 
-route.delete("/:id", auth, async (req, res) => {
+route.delete("/:id",  async (req, res) => {
   try {
     const testimonial = await Testimonial.deleteOne({ _id: req.params.id });
     if (testimonial && testimonial.deletedCount > 0)

@@ -3,7 +3,7 @@ const { setResponse } = require("../utils");
 const { DeveloperInfo } = require("../models/model");
 const auth = require("../middlewares/authentication");
 
-route.get("/:uid", auth, async (req, res) => {
+route.get("/:uid",  async (req, res) => {
   try {
     const developers = await DeveloperInfo.findOne({ user_id: req.params.uid });
     return setResponse(res, null, developers, 200);
@@ -12,7 +12,7 @@ route.get("/:uid", auth, async (req, res) => {
   }
 });
 
-route.put("/:uid", auth, async (req, res) => {
+route.put("/:uid",  async (req, res) => {
   try {
     const { name, field, email, phone, about } = req.body;
     const developers = await DeveloperInfo.updateOne(

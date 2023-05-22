@@ -4,7 +4,7 @@ const { UserInfo } = require("../models/model");
 const auth = require("../middlewares/authentication");
 
 
-// route.get("/:id", auth, async(req, res) => {
+// route.get("/:id",  async(req, res) => {
 //   try {
 //     const users = await UserInfo.findOne({_id: req.params.id});
 //     return setResponse(res, null, users, 200);
