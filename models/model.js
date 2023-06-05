@@ -2,103 +2,118 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const oid = mongoose.Types.ObjectId;
 
-
 const userSchema = Schema({
-    username:{
-        type: String,
-        required: true,
-    },
-    password:{
-        type: String,
-        required: true,
-    }
-})
+  username: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+});
 
 const developerSchema = Schema({
-    name:{
-        type: String,
-        required: true,
-    },
-    field:{
-        type: String,
-        required: true,
-    },
-    email:{
-        type: String,
-        required: true,
-    },
-    phone:{
-        type: String,
-        required: true,
-    },
-    about:{
-        type: String,
-        required: true,
-    },
-    user_id:{
-        type: oid,
-        required: true,
-    }
+  name: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  field: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  about: {
+    type: String,
+    required: true,
+  },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  links: {
+    type: Array,
+    default: [],
+  },
 });
 
 const serviceSchema = Schema({
-    name:{
-        type: String,
-        required: true,
-    },
-    description:{
-        type: String,
-        required: true,
-    },
-    user_id:{
-        type: oid,
-        required: true,
-    }
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 const projectSchema = Schema({
-    project_name:{
-        type: String,
-        required: true,
-    },
-    description:{
-        type: String,
-        required: true,
-    },
-    link:{
-        type: String,
-        required: true,
-    },
-    user_id:{
-        type: oid,
-        required: true,
-    }
+  project_name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  image: {
+    // type: mongoose.Schema.Types.ObjectId,
+    type: String,
+    required: true,
+  },
 });
 
 const testimonialSchema = Schema({
-    client_name:{
-        type: String,
-        required: true,
-    },
-    review:{
-        type: String,
-        required: true,
-    },
-    stars:{
-        type: String,
-        required: true,
-    },
-    field:{
-        type: String,
-        required: true,
-    },
-    user_id:{
-        type: oid,
-        required: true,
-    }
+  client_name: {
+    type: String,
+    required: true,
+  },
+  review: {
+    type: String,
+    required: true,
+  },
+  stars: {
+    type: String,
+    required: true,
+  },
+  field: {
+    type: String,
+    required: true,
+  },
+  image: {
+    // type: mongoose.Schema.Types.ObjectId,
+    type: String, //keeping it just for the time being.
+    required: true,
+  },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 });
-
-
 
 const UserInfo = mongoose.model("UserInfo", userSchema);
 const DeveloperInfo = mongoose.model("DeveloperInfo", developerSchema);
@@ -107,9 +122,9 @@ const Project = mongoose.model("Project", projectSchema);
 const Testimonial = mongoose.model("Testimonial", testimonialSchema);
 
 module.exports = {
-    UserInfo,
-    DeveloperInfo,
-    Service,
-    Project,
-    Testimonial,
+  UserInfo,
+  DeveloperInfo,
+  Service,
+  Project,
+  Testimonial,
 };
