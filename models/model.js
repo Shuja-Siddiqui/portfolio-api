@@ -13,6 +13,19 @@ const userSchema = Schema({
   },
 });
 
+const fileSchema = Schema({
+  file_code: {
+    type: Buffer,
+    required: true,
+  },
+  extension: {
+    type: String,
+    required: true,
+  },
+});
+
+const File = mongoose.model("File", fileSchema);
+
 const developerSchema = Schema({
   name: {
     type: String,
@@ -44,7 +57,12 @@ const developerSchema = Schema({
   },
   links: {
     type: Array,
-    default: [],
+    required: true,
+  },
+  image: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: File,
+    required: true,
   },
 });
 
@@ -81,8 +99,7 @@ const projectSchema = Schema({
     required: true,
   },
   image: {
-    // type: mongoose.Schema.Types.ObjectId,
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
 });
@@ -105,8 +122,7 @@ const testimonialSchema = Schema({
     required: true,
   },
   image: {
-    // type: mongoose.Schema.Types.ObjectId,
-    type: String, //keeping it just for the time being.
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   user_id: {
@@ -121,10 +137,12 @@ const Service = mongoose.model("Service", serviceSchema);
 const Project = mongoose.model("Project", projectSchema);
 const Testimonial = mongoose.model("Testimonial", testimonialSchema);
 
+
 module.exports = {
   UserInfo,
   DeveloperInfo,
   Service,
   Project,
   Testimonial,
+  File,
 };

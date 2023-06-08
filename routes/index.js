@@ -5,6 +5,7 @@ const service = require("./service");
 const project = require("./project");
 const testimonial = require("./testimonial");
 const login_authentication = require("./login_authentication");
+const file_upload = require("./file");
 const { default: mongoose } = require("mongoose");
 
 const MONGO_URI =
@@ -24,5 +25,6 @@ route.use("/service", service);
 route.use("/project", project);
 route.use("/testimonial", testimonial);
 route.use("/login", login_authentication);
+route.use("/file", file_upload);
 
 module.exports = route;

@@ -1,8 +1,10 @@
 const route = require("express").Router();
+const multer = require("multer");
 const { setResponse } = require("../utils");
-const { Project } = require("../models/model");
+const { Project, File } = require("../models/model");
 const auth = require("../middlewares/authentication");
 const ObjectId = require("mongoose").Types.ObjectId;
+const upload = multer();
 
 route.get("/:uid", async (req, res) => {
   try {
@@ -22,25 +24,66 @@ route.get("/single-project/:id", async (req, res) => {
   }
 });
 
-route.post("/:uid", auth, async (req, res) => {
+route.patch("/file/:id", auth, upload.single("image"), async (req, res) => {
+  console.log("trying to update project image")
+  const id = new ObjectId(req.params.id);
   try {
-    const { project_name, description, link, image } = req.body;
-    const uid = new ObjectId(req.params.uid);
-    const project = new Project({
-      project_name,
-      description,
-      link,
-      image,
-      user_id: uid,
+    const { buffer } = req.file;
+    const extension = req?.file?.mimetype;
+
+    const newFile = new File({
+      file_code: buffer,
+      extension,
     });
-    const response = await project.save();
-    return setResponse(res, "new", response, 201);
+
+    await newFile.save();
+
+    const project = await Project.updateOne(
+      { _id: id },
+      {
+        $set: { image: newFile?._id },
+      }
+    );
+    if (project)
+      return setResponse(res, "Data updated", null, 200);
+    return setResponse(res, "Project not found", null, 404);
   } catch {
     return setResponse(res, "Internal Server Error", null, 500);
   }
 });
 
-route.put("/:id", async (req, res) => {
+route.post("/:uid", auth, upload.single("image"), async (req, res) => {
+  try {
+    const { project_name, description, link } = req.body;
+    const uid = new ObjectId(req.params.uid);
+    const { buffer } = req.file;
+    const extension = req?.file?.mimetype;
+
+    const newFile = new File({
+      file_code: buffer,
+      extension,
+    });
+
+    await newFile.save();
+
+    const project = new Project({
+      project_name,
+      description,
+      link,
+      image: newFile._id,
+      user_id: uid,
+    });
+
+    const savedProject = await project.save();
+
+    return setResponse(res, "new", savedProject, 201);
+  } catch (error) {
+    console.error("Internal Server Error:", error);
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
+
+route.patch("/:id", async (req, res) => {
   try {
     const { project_name, description, link } = req.body;
     const id = new ObjectId(req.params.id);
