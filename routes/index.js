@@ -10,7 +10,6 @@ const { default: mongoose } = require("mongoose");
 
 const MONGO_URI =
   "mongodb+srv://ShujaUrRehman:shuja1234@portfolio.s7bz7a9.mongodb.net/?retryWrites=true&w=majority";
-console.log(MONGO_URI);
 
 mongoose.connect(MONGO_URI);
 const db = mongoose.connection;

@@ -25,7 +25,6 @@ route.get("/:id", async (req, res) => {
 });
 
 route.post("/:uid", auth, upload.single("image"), async (req, res) => {
-  console.log("Creating testimonial", req.body, "image is", req.file);
   const uid = new ObjectId(req.params.uid);
   try {
     const { client_name, review, stars, field } = req.body;

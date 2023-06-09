@@ -7,7 +7,9 @@ const upload = multer();
 
 route.get("/:uid", async (req, res) => {
   try {
-    const developers = await DeveloperInfo.findOne({ user_id: req.params.uid }).populate('image');
+    const developers = await DeveloperInfo.findOne({
+      user_id: req.params.uid,
+    }).populate("image");
     return setResponse(res, null, developers, 200);
   } catch {
     return setResponse(res, "Internal Server Error", null, 500);
@@ -15,10 +17,9 @@ route.get("/:uid", async (req, res) => {
 });
 
 route.put("/:uid", auth, upload.single("image"), async (req, res) => {
-  console.log("Req body", req.body, "file is", req.file)
   try {
     const { name, address, field, email, phone, about, links } = req.body;
-    const parsedLinks = JSON.parse(links)
+    const parsedLinks = JSON.parse(links);
     const extension = req.file?.originalname.split(".").pop();
     const file = req.file;
 
@@ -46,8 +47,7 @@ route.put("/:uid", auth, upload.single("image"), async (req, res) => {
       }
     );
 
-    if (developers)
-      return setResponse(res, "Data updated", null, 200);
+    if (developers) return setResponse(res, "Data updated", null, 200);
 
     return setResponse(res, "User not found", null, 404);
   } catch (error) {

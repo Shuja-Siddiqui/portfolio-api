@@ -25,7 +25,6 @@ route.get("/single-project/:id", async (req, res) => {
 });
 
 route.patch("/file/:id", auth, upload.single("image"), async (req, res) => {
-  console.log("trying to update project image")
   const id = new ObjectId(req.params.id);
   try {
     const { buffer } = req.file;
