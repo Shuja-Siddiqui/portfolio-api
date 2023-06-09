@@ -41,15 +41,15 @@ route.put("/:uid", auth, upload.single("image"), async (req, res) => {
           about,
           user_id: req.params.uid,
           links: parsedLinks,
-          image: savedFile?._id || null,
+          image: savedFile?._id,
         },
       }
     );
 
-    if (developers && developers.nModified > 0)
+    if (developers)
       return setResponse(res, "Data updated", null, 200);
 
-    return setResponse(res, "User not found(fake)", null, 200);
+    return setResponse(res, "User not found", null, 404);
   } catch (error) {
     console.error("Internal Server Error:", error);
     return setResponse(res, "Internal Server Error", null, 500);
