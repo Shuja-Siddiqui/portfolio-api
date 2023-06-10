@@ -9,7 +9,7 @@ route.get("/:uid", async (req, res) => {
   try {
     const developers = await DeveloperInfo.findOne({
       user_id: req.params.uid,
-    }).populate("image");
+    });
     return setResponse(res, null, developers, 200);
   } catch {
     return setResponse(res, "Internal Server Error", null, 500);

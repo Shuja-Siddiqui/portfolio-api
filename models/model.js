@@ -61,7 +61,6 @@ const developerSchema = Schema({
   },
   image: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: File,
     required: true,
   },
 });
@@ -136,7 +135,6 @@ const DeveloperInfo = mongoose.model("DeveloperInfo", developerSchema);
 const Service = mongoose.model("Service", serviceSchema);
 const Project = mongoose.model("Project", projectSchema);
 const Testimonial = mongoose.model("Testimonial", testimonialSchema);
-
 
 module.exports = {
   UserInfo,
