@@ -11,9 +11,8 @@ route.patch("/", auth, async (req, res) => {
       { $set: { email: new_email } },
       { new: true }
     );
-    if(!email){
-    return setResponse(res, "Not found", email, 404);
-
+    if (!email) {
+      return setResponse(res, "Not found", email, 404);
     }
     return setResponse(res, "Updated", email, 200);
   } catch (error) {

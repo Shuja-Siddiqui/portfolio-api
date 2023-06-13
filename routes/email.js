@@ -1,8 +1,11 @@
 const route = require("express").Router();
 const nodemailer = require("nodemailer");
+const { Settings } = require("../models/model");
 
 route.post("/", async (req, res) => {
   try {
+    const recieverEmail = await Settings.find({});
+    console.log(recieverEmail[0].email);
     const { name, email, message } = req.body;
     const transporter = nodemailer.createTransport({
       host: "mail.consoledot.com",
@@ -16,7 +19,7 @@ route.post("/", async (req, res) => {
 
     const info = await transporter.sendMail({
       from: email,
-      to: "abdulraheem@consoledot.com",
+      to: recieverEmail[0].email,
       subject: `New message from ${name}`,
       text: message,
     });

@@ -135,6 +135,10 @@ const settingsSchema = Schema({
     type: String,
     required: true,
   },
+  ref_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 });
 
 const UserInfo = mongoose.model("UserInfo", userSchema);

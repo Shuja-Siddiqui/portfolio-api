@@ -14,7 +14,6 @@ route.get("/:id", auth, async (req, res) => {
 
 route.patch("/:id", auth, async (req, res) => {
   const { new_username, username, password, new_password } = req.body;
-  console.log("Body for user update", req.body);
   try {
     const user = await UserInfo.findByIdAndUpdate(
       { _id: req.params.id },
