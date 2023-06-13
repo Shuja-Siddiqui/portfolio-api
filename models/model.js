@@ -130,11 +130,19 @@ const testimonialSchema = Schema({
   },
 });
 
+const settingsSchema = Schema({
+  email: {
+    type: String,
+    required: true,
+  },
+});
+
 const UserInfo = mongoose.model("UserInfo", userSchema);
 const DeveloperInfo = mongoose.model("DeveloperInfo", developerSchema);
 const Service = mongoose.model("Service", serviceSchema);
 const Project = mongoose.model("Project", projectSchema);
 const Testimonial = mongoose.model("Testimonial", testimonialSchema);
+const Settings = mongoose.model("Settings", settingsSchema);
 
 module.exports = {
   UserInfo,
@@ -143,4 +151,5 @@ module.exports = {
   Project,
   Testimonial,
   File,
+  Settings,
 };

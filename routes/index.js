@@ -7,6 +7,7 @@ const testimonial = require("./testimonial");
 const login_authentication = require("./login_authentication");
 const file_upload = require("./file");
 const email = require("./email");
+const settings = require("./settings");
 const { default: mongoose } = require("mongoose");
 
 const MONGO_URI =
@@ -27,5 +28,6 @@ route.use("/testimonial", testimonial);
 route.use("/login", login_authentication);
 route.use("/file", file_upload);
 route.use("/contact", email);
+route.use("/settings", settings);
 
 module.exports = route;
