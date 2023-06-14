@@ -43,7 +43,6 @@ route.patch("/file/:uid", auth, upload.single("image"), async (req, res) => {
 });
 
 route.patch("/:uid", auth, async (req, res) => {
-  console.log("updating text", req.body);
   try {
     const { name, address, field, email, phone, about, links } = req.body;
 
