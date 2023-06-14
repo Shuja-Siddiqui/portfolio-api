@@ -16,19 +16,36 @@ route.get("/:uid", async (req, res) => {
   }
 });
 
-route.put("/:uid", auth, upload.single("image"), async (req, res) => {
+route.patch("/file/:uid", auth, upload.single("image"), async (req, res) => {
+  const uid = req.params.uid;
   try {
-    const { name, address, field, email, phone, about, links } = req.body;
-    const parsedLinks = JSON.parse(links);
-    const extension = req.file?.originalname.split(".").pop();
-    const file = req.file;
+    const { buffer } = req.file;
+    const extension = req?.file?.mimetype;
 
     const newFile = new File({
-      file_code: file?.buffer,
+      file_code: buffer,
       extension,
     });
 
-    const savedFile = await newFile.save();
+    await newFile.save();
+
+    const developer = await DeveloperInfo.findOneAndUpdate(
+      { user_id: uid },
+      {
+        $set: { image: newFile?._id },
+      }
+    );
+    if (developer) return setResponse(res, "Data updated", null, 200);
+    return setResponse(res, "Developer not found", null, 404);
+  } catch {
+    return setResponse(res, "Internal Server Error", null, 500);
+  }
+});
+
+route.patch("/:uid", auth, async (req, res) => {
+  console.log("updating text", req.body);
+  try {
+    const { name, address, field, email, phone, about, links } = req.body;
 
     const developers = await DeveloperInfo.updateOne(
       { user_id: req.params.uid },
@@ -41,8 +58,7 @@ route.put("/:uid", auth, upload.single("image"), async (req, res) => {
           phone,
           about,
           user_id: req.params.uid,
-          links: parsedLinks,
-          image: savedFile?._id,
+          links,
         },
       }
     );
