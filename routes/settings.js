@@ -4,6 +4,7 @@ const { Settings } = require("../models/model");
 const { setResponse } = require("../utils");
 
 route.patch("/", auth, async (req, res) => {
+  console.log("Patching", req.body);
   const { current_email, new_email } = req.body;
   try {
     const email = await Settings.findOneAndUpdate(

@@ -19,20 +19,18 @@ route.patch("/:id", auth, async (req, res) => {
     if (username && user.username !== username) {
       return setResponse(res, "Not found", null, 404);
     }
-    if (password && user.password === password) {
+    if (password && user.password !== password) {
       return setResponse(res, "Not found", null, 404);
     }
 
-    user.username = username;
-    user.password = password;
-    // const updatedUser = await UserInfo.findByIdAndUpdate(
-    //   { _id: req.params.id },
-    //   {
-    //     new_username,
-    //     new_password,
-    //   },
-    //   { new: true }
-    // );
+    const updatedUser = await UserInfo.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        new_username,
+        new_password,
+      },
+      { new: true }
+    );
     return setResponse(res, "Updated", updatedUser, 200);
   } catch (error) {
     return setResponse(res, "Internal Server Error", null, 500);
