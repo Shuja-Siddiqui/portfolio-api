@@ -77,7 +77,6 @@ route.post("/:uid", auth, upload.single("image"), async (req, res) => {
 
     return setResponse(res, "new", savedProject, 201);
   } catch (error) {
-    console.error("Internal Server Error:", error);
     return setResponse(res, "Internal Server Error", null, 500);
   }
 });
