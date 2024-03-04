@@ -5,9 +5,17 @@ const mongoose = require("mongoose");
 class Developer extends Response {
   addDeveloper = async (req, res) => {
     try {
-      const { name, devId, avatar, residence, age, skills, projects } =
-        req.body;
-      console.log(name, devId, avatar, residence, age, skills, projects);
+      const {
+        name,
+        devId,
+        avatar,
+        residence,
+        age,
+        skills,
+        projects,
+        links,
+        about,
+      } = req.body;
       if (
         !name ||
         !devId ||
@@ -15,7 +23,9 @@ class Developer extends Response {
         !residence ||
         !age ||
         !skills ||
-        !projects
+        !projects ||
+        !links ||
+        !about
       ) {
         return this.sendResponse(req, res, {
           data: null,
@@ -23,9 +33,8 @@ class Developer extends Response {
           status: 400,
         });
       }
-      const devExist = await DeveloperModel.findOne({
-        devId,
-      });
+      const devExist = await DeveloperModel.findOne({ devId: devId });
+
       if (devExist) {
         return this.sendResponse(req, res, {
           data: null,
@@ -33,7 +42,6 @@ class Developer extends Response {
           status: 400,
         });
       }
-
       // Save the developer to the database
       const newDeveloper = new DeveloperModel({
         name,
@@ -42,7 +50,11 @@ class Developer extends Response {
         residence,
         age,
         skills,
-        projects,
+        projects: projects
+          ? projects?.map((project) => project?.id)?.filter((id) => id)
+          : [],
+        links,
+        about,
       });
       await newDeveloper.save();
       return this.sendResponse(req, res, {
@@ -87,11 +99,7 @@ class Developer extends Response {
             path: "title",
           },
         })
-        .populate({
-          path: "avatar",
-        })
         .select("-__v");
-
       if (!developer) {
         return this.sendResponse(req, res, {
           status: 404,
@@ -159,11 +167,21 @@ class Developer extends Response {
   updateDeveloper = async (req, res) => {
     try {
       const id = req.params.id;
-      const { name, devId, avatar, residence, age, skills, projects } =
-        req?.body;
+      const {
+        name,
+        devId,
+        avatar,
+        residence,
+        age,
+        skills,
+        projects,
+        links,
+        about,
+      } = req?.body;
       let developer = await DeveloperModel.findByIdAndUpdate(
         id,
         {
+          avatar,
           devId,
           name,
           age,
@@ -174,7 +192,16 @@ class Developer extends Response {
                 ratings,
               }))
             : [],
-          projects: projects ? projects.map((project) => project) : [],
+          projects: projects
+            ? projects?.map((project) => project?.id)?.filter((id) => id)
+            : [],
+          links: links
+            ? links?.map((link) => ({
+                title: link.title,
+                url: link.url,
+              }))
+            : {},
+          about,
         },
         { new: true }
       ).exec();

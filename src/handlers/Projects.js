@@ -4,14 +4,24 @@ const Response = require("./Response");
 class Projects extends Response {
   addProject = async (req, res) => {
     try {
-      const { projectName, clientName, duration, description, technologies } =
-        req.body;
+      const {
+        projectName,
+        clientName,
+        duration,
+        description,
+        technologies,
+        hero,
+        gallery,
+        techStack,
+        projectLink,
+      } = req.body;
       if (
         !projectName ||
         !clientName ||
         !duration ||
         !description ||
-        !technologies
+        !technologies ||
+        !techStack
       ) {
         return this.sendResponse(req, res, {
           data: null,
@@ -42,6 +52,10 @@ class Projects extends Response {
         duration,
         description,
         technologies,
+        hero,
+        gallery,
+        techStack,
+        projectLink,
       });
       await newProject.save();
 
@@ -114,11 +128,21 @@ class Projects extends Response {
   updateProject = async (req, res) => {
     try {
       const id = req.params.id;
-      const { projectName, clientName, duration, description, technologies } =
-        req?.body;
+      const {
+        projectName,
+        clientName,
+        duration,
+        description,
+        technologies,
+        hero,
+        gallery,
+        techStack,
+        projectLink,
+      } = req?.body;
       let project = await ProjectModel.findByIdAndUpdate(
         id,
         {
+          hero,
           clientName,
           projectName,
           description,
@@ -129,6 +153,9 @@ class Projects extends Response {
                 level,
               }))
             : [],
+          gallery: gallery ? gallery.map((gal) => gal) : {},
+          techStack,
+          projectLink,
         },
         { new: true }
       ).exec();

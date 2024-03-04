@@ -5,7 +5,6 @@ const sharp = require("sharp");
 class File extends Response {
   upload = async (req, res) => {
     try {
-      console.log(req.files);
       if (!req.files) {
         return this.sendResponse(req, res, {
           message: "Upload the file/image",
@@ -21,6 +20,36 @@ class File extends Response {
       return this.sendResponse(req, res, {
         status: 201,
         data: uploaded?._id,
+      });
+    } catch (error) {
+      console.log(error);
+      return this.sendResponse(req, res, {
+        status: 500,
+        message: "Internal Server Error!",
+      });
+    }
+  };
+  uploads = async (req, res) => {
+    try {
+      if (!req.files) {
+        return this.sendResponse(req, res, {
+          message: "Upload the file/image",
+          status: 404,
+          data: null,
+        });
+      }
+      const files = req.files;
+      const fileNames = [...Object.keys(files)];
+      const uploadables = [];
+      for (let i = 0; i < fileNames.length; i++) {
+        const { mimetype, data, name } = files[fileNames[i]];
+        const temp = await sharp(data).webp({ quality: 20 }).toBuffer();
+        uploadables.push({ mimetype, data: temp, name });
+      }
+      const newFiles = await FileModel.insertMany(uploadables);
+      return this.sendResponse(req, res, {
+        status: 201,
+        data: newFiles.map((i) => i?._id?.toString()),
       });
     } catch (error) {
       console.log(error);

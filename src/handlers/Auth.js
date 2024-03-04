@@ -13,7 +13,7 @@ class Auth extends Response {
         });
       }
       let userExist;
-      userExist = await DashboardUserModel.findOnde({
+      userExist = await DashboardUserModel.findOne({
         $or: [{ userName: username }, { email: username }],
       });
       if (!userExist) {
@@ -24,13 +24,15 @@ class Auth extends Response {
       }
       // check the password
       const password0 = userExist?.password;
-      const isValid = await bycrypt.compare(password0, password);
+      const isValid = await bcrypt.compare(password0, password);
       if (isValid) {
         return this.sendResponse(req, res, {
           status: 405,
           message: "Username/Password not correct",
         });
       }
+      // Generate JWT token
+      const token = jwt.sign({ id: userExist?.devId }, process.env.JWT_SECRET);
       return this.sendResponse(req, res, {
         data: { token, userExist },
         message: "Login Successful",
