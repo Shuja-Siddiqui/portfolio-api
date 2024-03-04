@@ -7,9 +7,10 @@ const developer = mongoose.Schema({
   },
   devId: {
     type: String,
-    unique: true,
     required: true,
+    unique: true,
   },
+  about: { type: String, required: true },
   avatar: {
     type: mongoose.Types.ObjectId,
     ref: "File",
@@ -32,6 +33,18 @@ const developer = mongoose.Schema({
         type: Number,
         required: true,
         default: 1,
+      },
+    },
+  ],
+  links: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
       },
     },
   ],

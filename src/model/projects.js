@@ -17,11 +17,23 @@ const projects = mongoose.Schema({
     required: true,
     type: String,
   },
+  hero: {
+    type: mongoose.Types.ObjectId,
+    ref: "File",
+  },
+  techStack: {
+    type: String,
+    required: true,
+  },
+  projectLink: {
+    type: String,
+  },
+  gallery: [{ type: mongoose.Types.ObjectId, ref: "File" }],
   technologies: [
     {
       name: {
         type: mongoose.Types.ObjectId,
-        ref: "Technologies",
+        ref: "Skills",
       },
       level: {
         type: Number,
