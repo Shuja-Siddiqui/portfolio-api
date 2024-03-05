@@ -8,7 +8,7 @@ class File extends Response {
       if (!req.files) {
         return this.sendResponse(req, res, {
           message: "Upload the file/image",
-          status: 200,
+          status: 404,
           data: null,
         });
       }

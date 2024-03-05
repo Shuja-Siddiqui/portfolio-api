@@ -1,3 +1,4 @@
+const { populate } = require("dotenv");
 const { DeveloperModel } = require("../model");
 const Response = require("./Response");
 const mongoose = require("mongoose");
@@ -15,6 +16,8 @@ class Developer extends Response {
         projects,
         links,
         about,
+        testimonials,
+        services,
       } = req.body;
       if (
         !name ||
@@ -25,7 +28,8 @@ class Developer extends Response {
         !skills ||
         !projects ||
         !links ||
-        !about
+        !about ||
+        !services
       ) {
         return this.sendResponse(req, res, {
           data: null,
@@ -53,6 +57,10 @@ class Developer extends Response {
         projects: projects
           ? projects?.map((project) => project?.id)?.filter((id) => id)
           : [],
+        testimonials: testimonials
+          ? testimonials?.map((testimonial) => testimonial)
+          : [],
+        services: services ? services?.map((service) => service) : [],
         links,
         about,
       });
@@ -93,6 +101,14 @@ class Developer extends Response {
             },
           },
         })
+        .populate("testimonials")
+        .populate({
+          path: "services",
+          populate: {
+            path: "name",
+            model: "Skills",
+          },
+        })
         .populate({
           path: "skills",
           populate: {
@@ -130,6 +146,17 @@ class Developer extends Response {
             select: "name level",
             populate: {
               path: "name",
+            },
+          },
+        })
+        .populate("testimonials")
+        .populate({
+          path: "services",
+          populate: {
+            path: "skills",
+            select: "name",
+            populate: {
+              path: "skillName",
             },
           },
         })
@@ -177,6 +204,8 @@ class Developer extends Response {
         projects,
         links,
         about,
+        testimonials,
+        services,
       } = req?.body;
       let developer = await DeveloperModel.findByIdAndUpdate(
         id,
@@ -195,6 +224,10 @@ class Developer extends Response {
           projects: projects
             ? projects?.map((project) => project?.id)?.filter((id) => id)
             : [],
+          testimonials: testimonials
+            ? testimonials?.map((testimonial) => testimonial)
+            : [],
+          services: services ? services?.map((service) => service) : [],
           links: links
             ? links?.map((link) => ({
                 title: link.title,
