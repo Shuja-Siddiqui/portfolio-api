@@ -36,6 +36,13 @@ const developer = mongoose.Schema({
       },
     },
   ],
+  testimonials: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Testimonial",
+    },
+  ],
+  services: [{ type: mongoose.Types.ObjectId, ref: "Services" }],
   links: [
     {
       title: {

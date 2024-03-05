@@ -4,6 +4,8 @@ const { SkillsModel } = require("./skill");
 const { FileModel } = require("./file");
 const { ProjectModel } = require("./projects");
 const { TechnologiesModel } = require("./technologies");
+const { TestimonialsModel } = require("./testimonials");
+const { ServicesModel } = require("./services");
 
 module.exports = {
   DashboardUserModel,
@@ -12,4 +14,6 @@ module.exports = {
   FileModel,
   ProjectModel,
   TechnologiesModel,
+  TestimonialsModel,
+  ServicesModel,
 };
