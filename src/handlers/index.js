@@ -6,6 +6,8 @@ const { Projects } = require("./Projects");
 const { Developer } = require("./Developer");
 const { Testimonials } = require("./Testimonials");
 const { Services } = require("./Services");
+const { Educations } = require("./Education");
+const { Experience } = require("./Experience");
 module.exports = {
   File,
   Auth,
@@ -15,4 +17,6 @@ module.exports = {
   Developer,
   Testimonials,
   Services,
+  Educations,
+  Experience,
 };
