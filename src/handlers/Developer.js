@@ -93,7 +93,7 @@ class Developer extends Response {
       }
 
       // Find the developer by its id and populate the projects field
-      const developer = await DeveloperModel.findOne({ _id: id })
+      const developer = await DeveloperModel.findOne({ devId: id })
         .populate({
           path: "projects",
           populate: {
@@ -106,6 +106,8 @@ class Developer extends Response {
         })
         .populate("testimonials")
         .populate("services")
+        .populate("education")
+        .populate("experience")
         .populate({
           path: "skills",
           populate: {
