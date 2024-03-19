@@ -14,7 +14,7 @@ class Testimonials extends Response {
       ) {
         return this.sendResponse(req, res, {
           data: null,
-          message: "Testtestimonial is Required of Type String",
+          message: "All fields are required",
           status: 400,
         });
       }

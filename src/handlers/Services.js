@@ -12,9 +12,26 @@ class Services extends Response {
           status: 400,
         });
       }
+      // Normalize the skill name (convert to lowercase and remove underscores)
+      const normalizedServiceName = name
+        .toLowerCase()
+        .replace(/_/g, "")
+        .replace(/\s+/g, "");
+
+      // Check if a skill with the normalized name already exists in the database
+      let skillExist = await ServicesModel.findOne({
+        serviceName: normalizedServiceName,
+      });
+      if (skillExist) {
+        return this.sendResponse(req, res, {
+          data: null,
+          message: "Skill already exists",
+          status: 400,
+        });
+      }
       // Save the service to the database
       const newTestservice = new ServicesModel({
-        name,
+        name: normalizedServiceName,
         description,
       });
       await newTestservice.save();
@@ -71,11 +88,7 @@ class Services extends Response {
   getServices = async (req, res) => {
     try {
       const service = await ServicesModel.find({})
-        .populate({
-          path: "name",
-          select: "skillName",
-        })
-        .select("-__v");
+      .select("-__v");
       if (!service) {
         return this.sendResponse(req, res, {
           status: 404,

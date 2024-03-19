@@ -6,6 +6,8 @@ const { ProjectModel } = require("./projects");
 const { TechnologiesModel } = require("./technologies");
 const { TestimonialsModel } = require("./testimonials");
 const { ServicesModel } = require("./services");
+const { EducationsModel } = require("./education");
+const { ExperiencesModel } = require("./experience");
 
 module.exports = {
   DashboardUserModel,
@@ -16,4 +18,6 @@ module.exports = {
   TechnologiesModel,
   TestimonialsModel,
   ServicesModel,
+  ExperiencesModel,
+  EducationsModel,
 };

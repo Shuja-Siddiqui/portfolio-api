@@ -10,6 +10,35 @@ const developer = mongoose.Schema({
     required: true,
     unique: true,
   },
+  languages: {
+    type: [
+      {
+        type: String,
+        required: true,
+        enum: [
+          "english",
+          "spanish",
+          "hindi",
+          "french",
+          "arabic",
+          "bengali",
+          "russian",
+          "portuguese",
+          "indonesian",
+          "urdu",
+          "german",
+          "japanese",
+          "swahili",
+          "marathi",
+          "telugu",
+          "turkish",
+          "tamil",
+          "punjabi",
+          "chinese",
+        ],
+      },
+    ],
+  },
   about: { type: String, required: true },
   avatar: {
     type: mongoose.Types.ObjectId,
@@ -23,6 +52,18 @@ const developer = mongoose.Schema({
     type: Number,
     required: true,
   },
+  education: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Education",
+    },
+  ],
+  experience: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Experience",
+    },
+  ],
   skills: [
     {
       title: {

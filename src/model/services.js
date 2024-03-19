@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const services = mongoose.Schema({
   name: {
-    type: mongoose.Types.ObjectId,
-    ref: "Skills",
+    type: String,
+    required: true,
   },
   description: {
     type: String,

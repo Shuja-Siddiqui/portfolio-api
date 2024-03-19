@@ -18,6 +18,7 @@ class Developer extends Response {
         about,
         testimonials,
         services,
+        languages,
       } = req.body;
       if (
         !name ||
@@ -29,7 +30,8 @@ class Developer extends Response {
         !projects ||
         !links ||
         !about ||
-        !services
+        !services ||
+        !languages
       ) {
         return this.sendResponse(req, res, {
           data: null,
@@ -63,6 +65,7 @@ class Developer extends Response {
         services: services ? services?.map((service) => service) : [],
         links,
         about,
+        languages,
       });
       await newDeveloper.save();
       return this.sendResponse(req, res, {
@@ -90,7 +93,7 @@ class Developer extends Response {
       }
 
       // Find the developer by its id and populate the projects field
-      const developer = await DeveloperModel.findOne({ _id: id })
+      const developer = await DeveloperModel.findOne({ devId: id })
         .populate({
           path: "projects",
           populate: {
@@ -102,13 +105,9 @@ class Developer extends Response {
           },
         })
         .populate("testimonials")
-        .populate({
-          path: "services",
-          populate: {
-            path: "name",
-            model: "Skills",
-          },
-        })
+        .populate("services")
+        .populate("education")
+        .populate("experience")
         .populate({
           path: "skills",
           populate: {
@@ -150,16 +149,9 @@ class Developer extends Response {
           },
         })
         .populate("testimonials")
-        .populate({
-          path: "services",
-          populate: {
-            path: "skills",
-            select: "name",
-            populate: {
-              path: "skillName",
-            },
-          },
-        })
+        .populate("education")
+        .populate("experience")
+        .populate("services")
         .populate({
           path: "skills",
           populate: {
@@ -206,6 +198,7 @@ class Developer extends Response {
         about,
         testimonials,
         services,
+        languages,
       } = req?.body;
       let developer = await DeveloperModel.findByIdAndUpdate(
         id,
@@ -235,6 +228,7 @@ class Developer extends Response {
               }))
             : {},
           about,
+          languages,
         },
         { new: true }
       ).exec();
