@@ -39,6 +39,15 @@ const developer = mongoose.Schema({
       },
     ],
   },
+  availability: {
+    type: [
+      {
+        type: String,
+        required: true,
+        enum: ["part", "full", "internship", "job"],
+      },
+    ],
+  },
   about: { type: String, required: true },
   avatar: {
     type: mongoose.Types.ObjectId,

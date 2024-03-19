@@ -19,6 +19,7 @@ class Developer extends Response {
         testimonials,
         services,
         languages,
+        availability,
       } = req.body;
       if (
         !name ||
@@ -31,7 +32,8 @@ class Developer extends Response {
         !links ||
         !about ||
         !services ||
-        !languages
+        !languages ||
+        !availability
       ) {
         return this.sendResponse(req, res, {
           data: null,
@@ -66,6 +68,7 @@ class Developer extends Response {
         links,
         about,
         languages,
+        availability,
       });
       await newDeveloper.save();
       return this.sendResponse(req, res, {
@@ -93,7 +96,9 @@ class Developer extends Response {
       }
 
       // Find the developer by its id and populate the projects field
-      const developer = await DeveloperModel.findOne({ devId: id })
+      const developer = await DeveloperModel.findOne({
+        $or: [{ _id: id }, { devId: id }],
+      })
         .populate({
           path: "projects",
           populate: {
@@ -199,6 +204,7 @@ class Developer extends Response {
         testimonials,
         services,
         languages,
+        availability,
       } = req?.body;
       let developer = await DeveloperModel.findByIdAndUpdate(
         id,
@@ -229,6 +235,7 @@ class Developer extends Response {
             : {},
           about,
           languages,
+          availability,
         },
         { new: true }
       ).exec();
