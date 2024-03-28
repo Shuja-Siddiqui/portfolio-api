@@ -12,6 +12,9 @@ class Developer extends Response {
         avatar,
         residence,
         age,
+        email,
+        phoneNo,
+        skype,
         skills,
         projects,
         links,
@@ -21,19 +24,38 @@ class Developer extends Response {
         languages,
         availability,
       } = req.body;
+      console.log(name,
+        devId,
+        avatar,
+        residence,
+        age,
+        email,
+        phoneNo,
+        skype,
+        skills,
+        projects,
+       'links', links,
+        about,
+        testimonials,
+        services,
+        languages,
+        availability)
       if (
-        !name ||
-        !devId ||
+        (!name || 
+        !devId || 
         !avatar ||
         !residence ||
-        !age ||
+         !age ||
+         !email ||
+        !phoneNo ||
+        !skype ||
         !skills ||
-        !projects ||
-        !links ||
-        !about ||
-        !services ||
-        !languages ||
-        !availability
+          !projects ||
+          !links ||
+          !about ||
+          !services ||
+          !languages ||
+          !availability)
       ) {
         return this.sendResponse(req, res, {
           data: null,
@@ -57,6 +79,9 @@ class Developer extends Response {
         avatar,
         residence,
         age,
+        email,
+          phoneNo,
+          skype,
         skills,
         projects: projects
           ? projects?.map((project) => project?.id)?.filter((id) => id)
@@ -197,6 +222,9 @@ class Developer extends Response {
         avatar,
         residence,
         age,
+        email,
+          phoneNo,
+          skype,
         skills,
         projects,
         links,
@@ -213,6 +241,9 @@ class Developer extends Response {
           devId,
           name,
           age,
+          email,
+          phoneNo,
+          skype,
           residence,
           skills: skills
             ? skills.map(({ title, ratings }) => ({
