@@ -61,6 +61,18 @@ const developer = mongoose.Schema({
     type: Number,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
+  phoneNo: {
+    type: String,
+    required: true,
+  },
+  skype: {
+    type: String,
+    required: true,
+  },
   education: [
     {
       type: mongoose.Types.ObjectId,
