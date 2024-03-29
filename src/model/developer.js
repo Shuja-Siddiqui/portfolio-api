@@ -49,6 +49,7 @@ const developer = mongoose.Schema({
     ],
   },
   about: { type: String, required: true },
+  intro: { type: String, required: true },
   avatar: {
     type: mongoose.Types.ObjectId,
     ref: "File",

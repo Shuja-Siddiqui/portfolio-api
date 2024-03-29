@@ -19,6 +19,7 @@ class Developer extends Response {
         projects,
         links,
         about,
+        intro,
         testimonials,
         services,
         languages,
@@ -31,6 +32,7 @@ class Developer extends Response {
         age,
         email,
         phoneNo,
+        intro,
         skype,
         skills,
         projects,
@@ -49,6 +51,7 @@ class Developer extends Response {
          !email ||
         !phoneNo ||
         !skype ||
+        !intro ||
         !skills ||
           !projects ||
           !links ||
@@ -78,6 +81,7 @@ class Developer extends Response {
         devId,
         avatar,
         residence,
+        intro,
         age,
         email,
           phoneNo,
@@ -229,6 +233,7 @@ class Developer extends Response {
         projects,
         links,
         about,
+        intro,
         testimonials,
         services,
         languages,
@@ -241,6 +246,7 @@ class Developer extends Response {
           devId,
           name,
           age,
+          intro,
           email,
           phoneNo,
           skype,
