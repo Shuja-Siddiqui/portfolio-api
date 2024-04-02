@@ -13,7 +13,13 @@ const app = express();
 // Middlewares
 
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: 'https://portfolio-dash-board.vercel.app',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+app.use(cors(corsOptions));
+// app.use(cors());
 app.use(express.static(path.join(__dirname, "../public")));
 app.use(file());
 
