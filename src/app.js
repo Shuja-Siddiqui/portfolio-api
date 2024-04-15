@@ -4,10 +4,18 @@ const app = express();
 const cors = require("cors");
 const db = require("./db");
 const path = require("node:path");
-app.use(express.json());
-app.use(cors('*'));
 const { router } = require("./routes");
 const file = require("express-fileupload");
+
+app.use(express.json());
+
+const corsOptions = {
+  credentials: true,
+  origin: ['http://localhost:3000', 'https://harry-zakai.vercel.app/'] // Whitelist the domains you want to allow
+};
+
+app.use(cors(corsOptions));
+// app.use(cors('*'));
 
 const PORT = process.env.PORT || 5000;
 
