@@ -14,7 +14,7 @@ class Auth extends Response {
       }
       let userExist;
       userExist = await DashboardUserModel.findOne({
-        $or: [{ userName: username }, { email: username }],
+        $or: [{ username: username }, { email: username }],
       });
       if (!userExist) {
         return this.sendResponse(req, res, {
