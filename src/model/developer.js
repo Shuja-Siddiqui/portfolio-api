@@ -106,6 +106,10 @@ const developer = mongoose.Schema({
     },
   ],
   projects: [{ type: mongoose.Types.ObjectId, ref: "Project" }],
+  intro: {
+    type: String,
+    required: true,
+  },
 });
 
 const DeveloperModel = mongoose.model("Developer", developer);
