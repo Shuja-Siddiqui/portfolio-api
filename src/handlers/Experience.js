@@ -109,10 +109,10 @@ class Experience extends Response {
       const experience = await ExperiencesModel.findByIdAndUpdate(
         req?.params?.id,
         {
-          clientName: req?.body?.clientName,
-          clientImage: req?.body.clientImage,
-          review: req?.body?.review,
-          stars: req?.body?.stars,
+          timeSpan: req?.body.timeSpan,
+          role: req?.body?.role,
+          description: req?.body?.description,
+          company: req?.body?.company,
         },
         { new: true }
       ).select("-__v");

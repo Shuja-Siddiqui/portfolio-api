@@ -205,6 +205,7 @@ class Developer extends Response {
         services,
         languages,
         availability,
+        intro,
       } = req?.body;
       let developer = await DeveloperModel.findByIdAndUpdate(
         id,
@@ -236,6 +237,7 @@ class Developer extends Response {
           about,
           languages,
           availability,
+          intro,
         },
         { new: true }
       ).exec();
