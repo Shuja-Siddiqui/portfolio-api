@@ -7,5 +7,6 @@ router.post("/", handlers.addExperience);
 router.get("/all/experience", handlers.getExperiences);
 router.get("/:id", handlers.getExperience);
 router.put("/:id", handlers.updateExperience);
+router.delete("/:id", handlers.deleteExperience);
 
 module.exports = router;

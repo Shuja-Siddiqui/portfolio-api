@@ -5,6 +5,10 @@ const projects = mongoose.Schema({
     type: String,
     required: true,
   },
+  thumbNail: {
+    required: true,
+    type: String,
+  },
   clientName: {
     type: String,
     required: true,

@@ -7,5 +7,6 @@ router.post("/", handlers.addProject);
 router.get("/:id", handlers.getProject);
 router.get("/all/projects", handlers.getProjects);
 router.put("/:id", handlers.updateProject);
+router.delete("/:id", handlers.deleteProject);
 
 module.exports = router;

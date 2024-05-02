@@ -7,6 +7,7 @@ class Projects extends Response {
       const {
         projectName,
         clientName,
+        thumbNail,
         duration,
         description,
         technologies,
@@ -20,6 +21,7 @@ class Projects extends Response {
         !clientName ||
         !duration ||
         !description ||
+        !thumbNail ||
         !technologies ||
         !techStack
       ) {
@@ -51,6 +53,7 @@ class Projects extends Response {
         clientName,
         duration,
         description,
+        thumbNail,
         technologies,
         hero,
         gallery,
@@ -133,6 +136,7 @@ class Projects extends Response {
         clientName,
         duration,
         description,
+        thumbNail,
         technologies,
         hero,
         gallery,
@@ -146,6 +150,7 @@ class Projects extends Response {
           clientName,
           projectName,
           description,
+          thumbNail,
           duration,
           technologies: technologies
             ? technologies.map(({ name, level }) => ({
@@ -175,6 +180,39 @@ class Projects extends Response {
       return this.sendResponse(req, res, {
         status: 500,
         message: "Internal server error !",
+      });
+    }
+  };
+  // Delete
+  deleteProject = async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return this.sendResponse(req, res, {
+          status: 400,
+          message: "Id is required to delete the project",
+        });
+      }
+      // Find the project by its id and delete it
+      const deletedProject = await ProjectModel.findOneAndDelete({
+        _id: id,
+      }).select("-__v");
+      if (!deletedProject) {
+        return this.sendResponse(req, res, {
+          status: 404,
+          message: `No project found with the given Id ${id}`,
+        });
+      }
+      return this.sendResponse(req, res, {
+        data: deletedProject,
+        status: 200,
+        message: "Project deleted successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return this.sendResponse(req, res, {
+        status: 500,
+        message: "Internal Server Error!",
       });
     }
   };

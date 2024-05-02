@@ -135,5 +135,38 @@ class Experience extends Response {
       });
     }
   };
+
+  deleteExperience = async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return this.sendResponse(req, res, {
+          status: 400,
+          message: "Id is required to delete the experience",
+        });
+      }
+      // Find the experience by its id and delete it
+      const deletedExperience = await ExperiencesModel.findOneAndDelete({
+        _id: id,
+      }).select("-__v");
+      if (!deletedExperience) {
+        return this.sendResponse(req, res, {
+          status: 404,
+          message: `No experience found with the given Id ${id}`,
+        });
+      }
+      return this.sendResponse(req, res, {
+        data: deletedExperience,
+        status: 200,
+        message: "Experience deleted successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return this.sendResponse(req, res, {
+        status: 500,
+        message: "Internal Server Error!",
+      });
+    }
+  };
 }
 module.exports = { Experience };

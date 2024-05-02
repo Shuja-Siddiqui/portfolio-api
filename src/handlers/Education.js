@@ -136,5 +136,38 @@ class Educations extends Response {
       });
     }
   };
+
+  deleteEducation = async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return this.sendResponse(req, res, {
+          status: 400,
+          message: "Id is required to delete the education",
+        });
+      }
+      // Find the education by its id and delete it
+      const deletedEducation = await EducationsModel.findOneAndDelete({
+        _id: id,
+      }).select("-__v");
+      if (!deletedEducation) {
+        return this.sendResponse(req, res, {
+          status: 404,
+          message: `No education found with the given Id ${id}`,
+        });
+      }
+      return this.sendResponse(req, res, {
+        data: deletedEducation,
+        status: 200,
+        message: "Education deleted successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return this.sendResponse(req, res, {
+        status: 500,
+        message: "Internal Server Error!",
+      });
+    }
+  };
 }
 module.exports = { Educations };
