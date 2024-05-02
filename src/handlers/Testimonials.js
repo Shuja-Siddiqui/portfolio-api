@@ -103,7 +103,7 @@ class Testimonials extends Response {
         {
           clientName: req?.body?.clientName,
           clientImage: req?.body.clientImage,
-          review: req?.body?.review,
+          clientReview: req?.body?.clientReview,
           stars: req?.body?.stars,
         },
         { new: true }

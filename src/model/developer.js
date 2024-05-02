@@ -10,6 +10,19 @@ const developer = mongoose.Schema({
     required: true,
     unique: true,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  phoneNo: {
+    type: String,
+    required: true,
+  },
+  skype: {
+    type: String,
+    required: true,
+  },
   languages: {
     type: [
       {
@@ -53,7 +66,11 @@ const developer = mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: "File",
   },
-  residence: {
+  country: {
+    type: String,
+    required: true,
+  },
+  city: {
     type: String,
     required: true,
   },

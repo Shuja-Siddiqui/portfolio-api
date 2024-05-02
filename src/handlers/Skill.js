@@ -129,5 +129,37 @@ class Skills extends Response {
       });
     }
   };
+  removeSkill = async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!id) {
+        return this.sendResponse(req, res, {
+          status: 400,
+          message: "Id is required to remove the skill",
+        });
+      }
+      // Find the skill by its id and remove it
+      const deletedSkill = await SkillsModel.findOneAndDelete({
+        _id: id,
+      }).select("-__v");
+      if (!deletedSkill) {
+        return this.sendResponse(req, res, {
+          status: 404,
+          message: `No skill found with the given Id ${id}`,
+        });
+      }
+      return this.sendResponse(req, res, {
+        data: deletedSkill,
+        status: 200,
+        message: "Skill deleted successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return this.sendResponse(req, res, {
+        status: 500,
+        message: "Internal Server Error!",
+      });
+    }
+  };
 }
 module.exports = { Skills };

@@ -9,8 +9,12 @@ class Developer extends Response {
       const {
         name,
         devId,
+        email,
+        phoneNo,
+        skype,
         avatar,
-        residence,
+        country,
+        city,
         age,
         skills,
         projects,
@@ -24,8 +28,12 @@ class Developer extends Response {
       if (
         !name ||
         !devId ||
+        !email ||
+        !phoneNo ||
+        !skype ||
         !avatar ||
-        !residence ||
+        !country ||
+        !city ||
         !age ||
         !skills ||
         !projects ||
@@ -54,8 +62,12 @@ class Developer extends Response {
       const newDeveloper = new DeveloperModel({
         name,
         devId,
+        email,
+        phoneNo,
+        skype,
         avatar,
-        residence,
+        country,
+        city,
         age,
         skills,
         projects: projects
@@ -194,8 +206,12 @@ class Developer extends Response {
       const {
         name,
         devId,
+        email,
+        phoneNo,
+        skype,
         avatar,
-        residence,
+        country,
+        city,
         age,
         skills,
         projects,
@@ -213,8 +229,12 @@ class Developer extends Response {
           avatar,
           devId,
           name,
+          email,
+          phoneNo,
+          skype,
           age,
-          residence,
+          country,
+          city,
           skills: skills
             ? skills.map(({ title, ratings }) => ({
                 title: title,
