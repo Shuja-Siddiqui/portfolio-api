@@ -4,10 +4,11 @@ const Response = require("./Response");
 class Testimonials extends Response {
   addTestimonial = async (req, res) => {
     try {
-      const { clientName, clientReview, stars, clientImage } = req.body;
+      const { clientName, clientDesignation, clientReview, stars, clientImage } = req.body;
       if (
         !clientName ||
         typeof clientName !== "string" ||
+        !clientDesignation ||
         !clientReview ||
         !stars ||
         !clientImage
@@ -23,6 +24,7 @@ class Testimonials extends Response {
       const newTesttestimonial = new TestimonialsModel({
         clientImage,
         clientName,
+        clientDesignation,
         clientReview,
         stars,
       });
@@ -102,6 +104,7 @@ class Testimonials extends Response {
         req?.params?.id,
         {
           clientName: req?.body?.clientName,
+          clientDesignation: req?.body?.clientDesignation,
           clientImage: req?.body.clientImage,
           clientReview: req?.body?.clientReview,
           stars: req?.body?.stars,

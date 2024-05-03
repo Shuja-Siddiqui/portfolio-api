@@ -5,6 +5,10 @@ const testimonial = mongoose.Schema({
     type: String,
     required: true,
   },
+  clientDesignation: {
+    type: String,
+    required: true,
+  },
   clientReview: {
     type: String,
     required: true,
