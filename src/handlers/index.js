@@ -8,6 +8,7 @@ const { Testimonials } = require("./Testimonials");
 const { Services } = require("./Services");
 const { Educations } = require("./Education");
 const { Experience } = require("./Experience");
+const { Mail } = require("./Mail");
 module.exports = {
   File,
   Auth,
@@ -19,4 +20,5 @@ module.exports = {
   Services,
   Educations,
   Experience,
+  Mail,
 };
