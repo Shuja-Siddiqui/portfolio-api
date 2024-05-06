@@ -9,6 +9,7 @@ const testimonial = require("./testimonials");
 const service = require("./services");
 const education = require("./education");
 const experience = require("./experience");
+const mail = require("./mail");
 
 // Routes
 router.use("/file", file);
@@ -21,5 +22,6 @@ router.use("/testimonial", testimonial);
 router.use("/service", service);
 router.use("/education", education);
 router.use("/experience", experience);
+router.use("/mail", mail);
 
 module.exports = { router };

@@ -6,14 +6,13 @@ const db = require("./db");
 const path = require("node:path");
 const { router } = require("./routes");
 const file = require("express-fileupload");
+const nodemailer = require("nodemailer");
 
 app.use(express.json());
-
 
 app.use(cors());
 
 const PORT = process.env.PORT || 5000;
-
 
 // Middlewares
 
