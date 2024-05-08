@@ -32,10 +32,7 @@ class Projects extends Response {
         });
       }
       // Normalize the project name (convert to lowercase and remove underscores)
-      const normalizedProjectName = projectName
-        .toLowerCase()
-        .replace(/_/g, "")
-        .replace(/\s+/g, "");
+      const normalizedProjectName = projectName;
       const projectExist = await ProjectModel.findOne({
         projectName: normalizedProjectName,
       });

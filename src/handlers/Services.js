@@ -13,10 +13,7 @@ class Services extends Response {
         });
       }
       // Normalize the skill name (convert to lowercase and remove underscores)
-      const normalizedServiceName = name
-        .toLowerCase()
-        .replace(/_/g, "")
-        .replace(/\s+/g, "");
+      const normalizedServiceName = name;
 
       // Check if a skill with the normalized name already exists in the database
       let skillExist = await ServicesModel.findOne({

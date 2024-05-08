@@ -14,10 +14,7 @@ class Technologies extends Response {
       }
 
       // Normalize the tech name (convert to lowercase and remove underscores)
-      const normalizedTechName = techName
-        .toLowerCase()
-        .replace(/_/g, "")
-        .replace(/\s+/g, "");
+      const normalizedTechName = techName;
 
       // Check if a tech with the normalized name already exists in the database
       let techExist = await TechnologiesModel.findOne({

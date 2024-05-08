@@ -14,11 +14,7 @@ class Skills extends Response {
       }
 
       // Normalize the skill name (convert to lowercase and remove underscores)
-      const normalizedSkillName = skillName
-        .toLowerCase()
-        .replace(/_/g, "")
-        .replace(/\s+/g, "");
-
+      const normalizedSkillName = skillName;
       // Check if a skill with the normalized name already exists in the database
       let skillExist = await SkillsModel.findOne({
         skillName: normalizedSkillName,
@@ -41,7 +37,6 @@ class Skills extends Response {
         status: 201,
       });
     } catch (error) {
-      console.log(error);
       return this.sendResponse(req, res, {
         data: null,
         message: "Internal Server Error!",

@@ -24,6 +24,7 @@ class Developer extends Response {
         services,
         languages,
         availability,
+        intro
       } = req.body;
       if (
         !name ||
@@ -41,7 +42,8 @@ class Developer extends Response {
         !about ||
         !services ||
         !languages ||
-        !availability
+        !availability ||
+        !intro
       ) {
         return this.sendResponse(req, res, {
           data: null,
@@ -79,6 +81,7 @@ class Developer extends Response {
         services: services ? services?.map((service) => service) : [],
         links,
         about,
+        intro,
         languages,
         availability,
       });
