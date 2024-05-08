@@ -11,7 +11,7 @@ const experience = mongoose.Schema({
       required: true,
     },
     endYear: {
-      type: Number,
+      type: String,
       required: true,
     },
   },
