@@ -16,6 +16,7 @@ class Developer extends Response {
         country,
         city,
         age,
+        devCV,
         skills,
         projects,
         links,
@@ -36,6 +37,7 @@ class Developer extends Response {
         !country ||
         !city ||
         !age ||
+        !devCV||
         !skills ||
         !projects ||
         !links ||
@@ -71,6 +73,7 @@ class Developer extends Response {
         country,
         city,
         age,
+        devCV,
         skills,
         projects: projects
           ? projects?.map((project) => project?.id)?.filter((id) => id)
@@ -216,6 +219,7 @@ class Developer extends Response {
         country,
         city,
         age,
+        devCV,
         skills,
         projects,
         links,
@@ -236,6 +240,7 @@ class Developer extends Response {
           phoneNo,
           skype,
           age,
+          devCV,
           country,
           city,
           skills: skills

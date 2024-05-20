@@ -73,6 +73,9 @@ const developer = mongoose.Schema({
     type: Number,
     required: true,
   },
+  devCV: {
+    type: String,
+  },
   education: [
     {
       type: mongoose.Types.ObjectId,
