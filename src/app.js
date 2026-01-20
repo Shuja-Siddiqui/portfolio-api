@@ -7,6 +7,7 @@ const path = require("node:path");
 const { router } = require("./routes");
 const file = require("express-fileupload");
 const nodemailer = require("nodemailer");
+const { Settings } = require("./handlers");
 
 app.use(express.json());
 
@@ -35,8 +36,21 @@ app.listen(PORT, () => {
   });
 
   //   DATABASE OPEN
-  db.on("open", () => {
+  db.on("open", async () => {
     console.log("\x1b[32m", "[+] Database Connected");
+    
+    // Load API key from database on startup
+    try {
+      const apiKey = await Settings.getApiKey();
+      if (apiKey) {
+        console.log("\x1b[32m", "[+] Gemini API key loaded from database");
+      } else {
+        console.log("\x1b[33m", "[!] No Gemini API key found in database. Using environment variable or default.");
+      }
+    } catch (error) {
+      console.log("\x1b[33m", "[!] Error loading API key:", error.message);
+    }
+    
     console.log("\x1b[32m", `[+] Server Started: http://localhost:${PORT}`);
   });
 });

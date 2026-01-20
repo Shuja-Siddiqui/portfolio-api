@@ -10,6 +10,10 @@ const service = require("./services");
 const education = require("./education");
 const experience = require("./experience");
 const mail = require("./mail");
+const extension = require("./extension");
+const prompt = require("./prompt");
+const settings = require("./settings");
+const video = require("./video");
 
 // Routes
 router.use("/file", file);
@@ -23,5 +27,9 @@ router.use("/service", service);
 router.use("/education", education);
 router.use("/experience", experience);
 router.use("/mail", mail);
+router.use("/extension", extension);
+router.use("/prompt", prompt);
+router.use("/settings", settings);
+router.use("/video", video);
 
 module.exports = { router };

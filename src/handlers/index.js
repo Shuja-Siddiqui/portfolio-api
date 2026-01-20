@@ -9,6 +9,10 @@ const { Services } = require("./Services");
 const { Educations } = require("./Education");
 const { Experience } = require("./Experience");
 const { Mail } = require("./Mail");
+const { Extension } = require("./Extension");
+const { Prompt } = require("./Prompt");
+const { Settings } = require("./Settings");
+const { Video } = require("./Video");
 module.exports = {
   File,
   Auth,
@@ -21,4 +25,8 @@ module.exports = {
   Educations,
   Experience,
   Mail,
+  Extension,
+  Prompt,
+  Settings,
+  Video,
 };
