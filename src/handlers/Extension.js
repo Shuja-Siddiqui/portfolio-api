@@ -426,6 +426,249 @@ Please generate a professional Upwork proposal based on the above information.`;
       });
     }
   };
+
+  // Chat recraft using Gemini with full conversation context
+  chatRecraft = async (req, res) => {
+    try {
+      const {
+        developer,
+        projects,
+        videos,
+        jobDescription,
+        conversationHistory,
+        currentProposal,
+        newUserRequest,
+      } = req.body;
+
+      if (!developer || !jobDescription || !currentProposal || !newUserRequest) {
+        return this.sendResponse(req, res, {
+          data: null,
+          message:
+            "Developer, job description, current proposal, and new user request are required",
+          status: 400,
+        });
+      }
+
+      // Initialize Gemini - Load API key from database
+      const apiKey = await Settings.getApiKey();
+
+      if (!apiKey) {
+        return this.sendResponse(req, res, {
+          data: null,
+          message: "Gemini API key is not configured. Please set it in Settings.",
+          status: 400,
+        });
+      }
+
+      const genAI = new GoogleGenerativeAI(apiKey);
+
+      // Get available models
+      const availableModels = await this.getAvailableModels(apiKey);
+      console.log(
+        "Available models (chat recraft):",
+        availableModels.map((m) => m.name)
+      );
+
+      // Find all models that support generateContent
+      const supportedModels = [];
+      for (const model of availableModels) {
+        if (
+          model.supportedGenerationMethods &&
+          model.supportedGenerationMethods.includes("generateContent")
+        ) {
+          // Extract model name (remove 'models/' prefix if present)
+          const modelName = model.name.replace("models/", "");
+          supportedModels.push(modelName);
+        }
+      }
+
+      console.log(
+        "Supported models for generateContent (chat recraft):",
+        supportedModels
+      );
+
+      // Format projects text
+      const projectsText =
+        projects && projects.length > 0
+          ? projects
+              .map((project) => {
+                const projectName = project.projectName || "N/A";
+                const description = project.description || "N/A";
+                const projectLink = project.projectLink || "N/A";
+                return `- ${projectName}: ${description}. Link: ${projectLink}`;
+              })
+              .join("\n\n")
+          : "No projects provided";
+
+      // Format videos text
+      const videosText =
+        videos && videos.length > 0
+          ? videos
+              .map((video) => {
+                const title = video.title || "N/A";
+                const link = video.link || "N/A";
+                return `- ${title}: ${link}`;
+              })
+              .join("\n")
+          : "No videos provided";
+
+      // Format conversation history
+      const historyText =
+        conversationHistory && conversationHistory.length > 0
+          ? conversationHistory
+              .map((m) => {
+                const role = m.role === "user" ? "User" : "Assistant";
+                return `${role}: ${m.content || ""}`;
+              })
+              .join("\n\n")
+          : "No previous conversation history.";
+
+      // System-style instructions for the chat agent
+      const chatSystemPrompt = `You are an AI assistant that specializes in recrafting Upwork job proposals through an interactive chat.
+
+You will always receive the following data in each request:
+- Developer info: the freelancer's name and "about" summary.
+- Projects: a list of past projects, each with a name, description, and project link.
+- Videos (if any): a list of video case studies, each with a title and link.
+- Job description: the client's job post text.
+- Conversation history: all previous messages between the user and assistant in this chat, including earlier proposal versions and user requests.
+- Current proposal: the latest version of the proposal that you should use as the base for recrafting.
+- New user request: the latest instruction from the user about how to change or improve the proposal.
+
+Your role and behavior:
+- You are a chat agent only for recrafting proposals, not for writing about anything else.
+- You must carefully read and respect the developer info, projects, project links, videos, and job description so that all details in the proposal remain accurate and consistent.
+- Use the full conversation history to understand what has already been changed, what the user liked or didn't like, and what the current style and tone are.
+- Always treat the current proposal as the starting point, and apply the new user request on top of it (for example, make it shorter, more friendly, more technical, more focused on a specific project, etc.).
+- Preserve all factual details such as developer name, project names, project links, video links, and important achievements, unless the user explicitly asks you to change or remove them.
+- Maintain a professional, clear, and client-friendly tone suitable for an Upwork proposal.
+
+Output requirements (very important):
+- Return ONLY the recrafted proposal text.
+- Do NOT include explanations, commentary, notes, or meta-text.
+- Do NOT say things like "Here is the recrafted proposal:" or "Sure, I updated it as follows:".
+- Start directly with the proposal content and end with the proposal content.`;
+
+      // Build the full prompt for chat recraft
+      const fullPrompt = `${chatSystemPrompt}
+
+DEVELOPER INFORMATION:
+Name: ${developer.name || "N/A"}
+About: ${developer.about || "N/A"}
+
+RELEVANT PROJECTS:
+${projectsText}
+
+VIDEOS:
+${videosText}
+
+JOB DESCRIPTION:
+${jobDescription}
+
+CONVERSATION HISTORY:
+${historyText}
+
+CURRENT PROPOSAL:
+${currentProposal}
+
+NEW USER REQUEST:
+${newUserRequest}
+
+Now recraft the proposal based on the user's latest request while maintaining all important, factual details. Return ONLY the recrafted proposal text, with no explanations or extra commentary.`;
+
+      // Build model list: use supported models first, then fallback to known working models
+      const modelNames = [];
+
+      if (supportedModels.length > 0) {
+        const sortedModels = supportedModels.sort((a, b) => {
+          if (a.includes("pro") && !b.includes("pro")) return -1;
+          if (!a.includes("pro") && b.includes("pro")) return 1;
+          if (a.includes("lite") && !b.includes("lite")) return -1;
+          if (!a.includes("lite") && b.includes("lite")) return 1;
+          return 0;
+        });
+        modelNames.push(...sortedModels);
+      }
+
+      const fallbackModels = [
+        "gemini-2.5-pro",
+        "gemini-2.0-flash",
+        "gemini-2.5-flash-lite",
+        "gemini-2.0-flash-lite",
+      ];
+
+      for (const fallback of fallbackModels) {
+        if (!modelNames.includes(fallback)) {
+          modelNames.push(fallback);
+        }
+      }
+
+      console.log("Trying models in order (chat recraft):", modelNames);
+
+      let proposal;
+      let lastError;
+      let quotaExceeded = false;
+
+      for (const modelName of modelNames) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          const result = await model.generateContent(fullPrompt);
+          const response = await result.response;
+          proposal = response.text();
+          console.log(`Successfully used model for chat recraft: ${modelName}`);
+          break;
+        } catch (err) {
+          lastError = err;
+          console.log(
+            `Failed to use model ${modelName} for chat recraft:`,
+            err.message
+          );
+
+          if (err.message && (err.message.includes("429") || err.message.includes("quota"))) {
+            quotaExceeded = true;
+            console.log(
+              `Quota exceeded for ${modelName} (chat recraft), trying next model...`
+            );
+          }
+
+          continue;
+        }
+      }
+
+      if (!proposal) {
+        let errorMsg = `All Gemini models failed for chat recraft. Last error: ${
+          lastError?.message || "Unknown error"
+        }. `;
+
+        if (quotaExceeded) {
+          errorMsg +=
+            "\nQuota exceeded for free tier models. You've reached the daily limit (20 requests/day). " +
+            "Please wait or upgrade your Google Cloud plan.";
+        } else {
+          errorMsg +=
+            `Available models: ${
+              supportedModels.join(", ") || availableModels.map((m) => m.name).join(", ")
+            } or could not fetch. ` +
+            "Please check your API key permissions in Google Cloud Console.";
+        }
+
+        throw new Error(errorMsg);
+      }
+
+      return this.sendResponse(req, res, {
+        data: { proposal },
+        status: 200,
+        message: "Proposal recrafted successfully",
+      });
+    } catch (error) {
+      console.log("Gemini Chat Recraft API Error:", error);
+      return this.sendResponse(req, res, {
+        data: null,
+        message: error.message || "Failed to recraft proposal",
+        status: 500,
+      });
+    }
+  };
 }
 
 module.exports = { Extension };

@@ -17,5 +17,8 @@ router.get("/prompts/search", handlers.searchPrompts);
 // Generate proposal endpoint
 router.post("/generate-proposal", handlers.generateProposal);
 
+// Chat recraft endpoint - uses full chat history and current proposal
+router.post("/chat-recraft", handlers.chatRecraft);
+
 module.exports = router;
 
