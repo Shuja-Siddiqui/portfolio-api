@@ -9,6 +9,11 @@ const services = mongoose.Schema({
     type: String,
     required: true,
   },
+  icon: {
+    type: String,
+    required: false,
+    default: "code",
+  },
 });
 
 const ServicesModel = mongoose.model("Services", services);

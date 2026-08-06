@@ -4,37 +4,33 @@ const Response = require("./Response");
 class Services extends Response {
   addService = async (req, res) => {
     try {
-      const { name, description } = req.body;
+      const { name, description, icon } = req.body;
       if (!description || !name) {
         return this.sendResponse(req, res, {
           data: null,
-          message: "Service is Required of Type String",
+          message: "Service name and description are required",
           status: 400,
         });
       }
-      // Normalize the skill name (convert to lowercase and remove underscores)
-      const normalizedServiceName = name;
 
-      // Check if a skill with the normalized name already exists in the database
-      let skillExist = await ServicesModel.findOne({
-        serviceName: normalizedServiceName,
-      });
-      if (skillExist) {
+      const existing = await ServicesModel.findOne({ name });
+      if (existing) {
         return this.sendResponse(req, res, {
           data: null,
-          message: "Skill already exists",
+          message: "Service already exists",
           status: 400,
         });
       }
-      // Save the service to the database
-      const newTestservice = new ServicesModel({
-        name: normalizedServiceName,
+
+      const newService = new ServicesModel({
+        name,
         description,
+        icon: icon || "code",
       });
-      await newTestservice.save();
+      await newService.save();
 
       return this.sendResponse(req, res, {
-        data: null,
+        data: newService,
         message: "Service added successfully",
         status: 201,
       });
@@ -47,6 +43,7 @@ class Services extends Response {
       });
     }
   };
+
   getService = async (req, res) => {
     try {
       const { id } = req.params;
@@ -56,13 +53,7 @@ class Services extends Response {
           message: "Id is required to retrieve the service",
         });
       }
-      // Find the service by its id from
-      const service = await ServicesModel.findOne({ _id: id })
-        .populate({
-          path: "name",
-          select: "skillName",
-        })
-        .select("-__v");
+      const service = await ServicesModel.findOne({ _id: id }).select("-__v");
       if (!service) {
         return this.sendResponse(req, res, {
           status: 404,
@@ -72,7 +63,7 @@ class Services extends Response {
       return this.sendResponse(req, res, {
         data: service,
         status: 200,
-        message: "Testservice fetched",
+        message: "Service fetched",
       });
     } catch (error) {
       console.log(error);
@@ -82,10 +73,10 @@ class Services extends Response {
       });
     }
   };
+
   getServices = async (req, res) => {
     try {
-      const service = await ServicesModel.find({})
-      .select("-__v");
+      const service = await ServicesModel.find({}).select("-__v");
       if (!service) {
         return this.sendResponse(req, res, {
           status: 404,
@@ -95,7 +86,7 @@ class Services extends Response {
       return this.sendResponse(req, res, {
         data: service,
         status: 200,
-        message: "Testservice fetched",
+        message: "Services fetched",
       });
     } catch (error) {
       console.log(error);
@@ -105,6 +96,7 @@ class Services extends Response {
       });
     }
   };
+
   updateService = async (req, res) => {
     try {
       const service = await ServicesModel.findByIdAndUpdate(
@@ -112,6 +104,7 @@ class Services extends Response {
         {
           description: req?.body.description,
           name: req?.body?.name,
+          icon: req?.body?.icon || "code",
         },
         { new: true }
       ).select("-__v");
@@ -124,7 +117,7 @@ class Services extends Response {
       return this.sendResponse(req, res, {
         data: service,
         status: 200,
-        message: "Testservice updated",
+        message: "Service updated",
       });
     } catch (error) {
       console.log(error);
