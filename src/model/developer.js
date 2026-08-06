@@ -71,7 +71,7 @@ const developer = mongoose.Schema({
   },
   age: {
     type: Number,
-    required: true,
+    required: false,
   },
   devCV: {
     type: String,
@@ -96,7 +96,7 @@ const developer = mongoose.Schema({
       },
       ratings: {
         type: Number,
-        required: true,
+        required: false,
         default: 1,
       },
     },

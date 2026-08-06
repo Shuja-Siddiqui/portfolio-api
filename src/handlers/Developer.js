@@ -36,8 +36,7 @@ class Developer extends Response {
         !avatar ||
         !country ||
         !city ||
-        !age ||
-        !devCV||
+        !devCV ||
         !skills ||
         !projects ||
         !links ||
@@ -72,9 +71,14 @@ class Developer extends Response {
         avatar,
         country,
         city,
-        age,
+        ...(age !== undefined && age !== null && age !== "" ? { age } : {}),
         devCV,
-        skills,
+        skills: skills
+          ? skills.map(({ title, ratings }) => ({
+              title,
+              ratings: ratings ?? 1,
+            }))
+          : [],
         projects: projects
           ? projects?.map((project) => project?.id)?.filter((id) => id)
           : [],
@@ -230,43 +234,50 @@ class Developer extends Response {
         availability,
         intro,
       } = req?.body;
+      const updatePayload = {
+        avatar,
+        devId,
+        name,
+        email,
+        phoneNo,
+        skype,
+        devCV,
+        country,
+        city,
+        skills: skills
+          ? skills.map(({ title, ratings }) => ({
+              title: title,
+              ratings: ratings ?? 1,
+            }))
+          : [],
+        projects: projects
+          ? projects?.map((project) => project?.id)?.filter((id) => id)
+          : [],
+        testimonials: testimonials
+          ? testimonials?.map((testimonial) => testimonial)
+          : [],
+        services: services ? services?.map((service) => service) : [],
+        links: links
+          ? links?.map((link) => ({
+              title: link.title,
+              url: link.url,
+            }))
+          : [],
+        about,
+        languages,
+        availability,
+        intro,
+      };
+
+      if (age !== undefined && age !== null && age !== "") {
+        updatePayload.age = age;
+      }
+
       let developer = await DeveloperModel.findByIdAndUpdate(
         id,
-        {
-          avatar,
-          devId,
-          name,
-          email,
-          phoneNo,
-          skype,
-          age,
-          devCV,
-          country,
-          city,
-          skills: skills
-            ? skills.map(({ title, ratings }) => ({
-                title: title,
-                ratings,
-              }))
-            : [],
-          projects: projects
-            ? projects?.map((project) => project?.id)?.filter((id) => id)
-            : [],
-          testimonials: testimonials
-            ? testimonials?.map((testimonial) => testimonial)
-            : [],
-          services: services ? services?.map((service) => service) : [],
-          links: links
-            ? links?.map((link) => ({
-                title: link.title,
-                url: link.url,
-              }))
-            : {},
-          about,
-          languages,
-          availability,
-          intro,
-        },
+        age === undefined || age === null || age === ""
+          ? { $set: updatePayload, $unset: { age: "" } }
+          : { $set: updatePayload },
         { new: true }
       ).exec();
 
