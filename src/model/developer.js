@@ -125,6 +125,11 @@ const developer = mongoose.Schema({
     type: String,
     required: true,
   },
+  introVideo: {
+    type: String,
+    required: false,
+    default: "",
+  },
 });
 
 const DeveloperModel = mongoose.model("Developer", developer);

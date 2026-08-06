@@ -25,7 +25,8 @@ class Developer extends Response {
         services,
         languages,
         availability,
-        intro
+        intro,
+        introVideo,
       } = req.body;
       if (
         !name ||
@@ -89,6 +90,7 @@ class Developer extends Response {
         links,
         about,
         intro,
+        introVideo: introVideo || "",
         languages,
         availability,
       });
@@ -233,6 +235,7 @@ class Developer extends Response {
         languages,
         availability,
         intro,
+        introVideo,
       } = req?.body;
       const updatePayload = {
         avatar,
@@ -267,6 +270,7 @@ class Developer extends Response {
         languages,
         availability,
         intro,
+        introVideo: introVideo || "",
       };
 
       if (age !== undefined && age !== null && age !== "") {
