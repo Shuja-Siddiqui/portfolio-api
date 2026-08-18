@@ -99,6 +99,19 @@ const developer = mongoose.Schema({
         required: false,
         default: 1,
       },
+      /** Nominate for profile typed line under avatar */
+      featured: {
+        type: Boolean,
+        required: false,
+        default: false,
+      },
+      /** Display order under profile (1–5). Lower = first. */
+      typedOrder: {
+        type: Number,
+        required: false,
+        min: 1,
+        max: 5,
+      },
     },
   ],
   testimonials: [

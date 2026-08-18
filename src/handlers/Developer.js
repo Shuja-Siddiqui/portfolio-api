@@ -75,9 +75,13 @@ class Developer extends Response {
         ...(age !== undefined && age !== null && age !== "" ? { age } : {}),
         devCV,
         skills: skills
-          ? skills.map(({ title, ratings }) => ({
+          ? skills.map(({ title, ratings, featured, typedOrder }) => ({
               title,
               ratings: ratings ?? 1,
+              featured: Boolean(featured),
+              ...(typedOrder >= 1 && typedOrder <= 5
+                ? { typedOrder: Number(typedOrder) }
+                : {}),
             }))
           : [],
         projects: projects
@@ -248,9 +252,13 @@ class Developer extends Response {
         country,
         city,
         skills: skills
-          ? skills.map(({ title, ratings }) => ({
+          ? skills.map(({ title, ratings, featured, typedOrder }) => ({
               title: title,
               ratings: ratings ?? 1,
+              featured: Boolean(featured),
+              ...(typedOrder >= 1 && typedOrder <= 5
+                ? { typedOrder: Number(typedOrder) }
+                : {}),
             }))
           : [],
         projects: projects
