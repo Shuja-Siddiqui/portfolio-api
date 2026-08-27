@@ -1,5 +1,21 @@
 const mongoose = require("mongoose");
 
+const contentBlock = {
+  format: {
+    type: String,
+    enum: ["paragraph", "bullets"],
+    default: "paragraph",
+  },
+  text: {
+    type: String,
+    default: "",
+  },
+  items: {
+    type: [String],
+    default: [],
+  },
+};
+
 const projects = mongoose.Schema({
   projectName: {
     type: String,
@@ -44,6 +60,30 @@ const projects = mongoose.Schema({
         default: 1,
         required: true,
       },
+    },
+  ],
+  /** classic = existing layout; showcase = carousel + problem/solution + FAQs */
+  detailLayout: {
+    type: String,
+    enum: ["classic", "showcase"],
+    default: "classic",
+  },
+  youtubeUrl: {
+    type: String,
+    default: "",
+  },
+  problem: {
+    type: contentBlock,
+    default: () => ({ format: "paragraph", text: "", items: [] }),
+  },
+  solution: {
+    type: contentBlock,
+    default: () => ({ format: "paragraph", text: "", items: [] }),
+  },
+  faqs: [
+    {
+      question: { type: String, required: true },
+      answer: { type: String, required: true },
     },
   ],
 });

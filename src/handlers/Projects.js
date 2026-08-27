@@ -15,6 +15,11 @@ class Projects extends Response {
         gallery,
         techStack,
         projectLink,
+        detailLayout,
+        youtubeUrl,
+        problem,
+        solution,
+        faqs,
       } = req.body;
       if (
         !projectName ||
@@ -55,7 +60,12 @@ class Projects extends Response {
         hero,
         gallery,
         techStack,
-        projectLink,
+        projectLink: projectLink || "",
+        detailLayout: detailLayout === "showcase" ? "showcase" : "classic",
+        youtubeUrl: youtubeUrl || "",
+        problem: problem || { format: "paragraph", text: "", items: [] },
+        solution: solution || { format: "paragraph", text: "", items: [] },
+        faqs: Array.isArray(faqs) ? faqs : [],
       });
       await newProject.save();
 
@@ -139,6 +149,11 @@ class Projects extends Response {
         gallery,
         techStack,
         projectLink,
+        detailLayout,
+        youtubeUrl,
+        problem,
+        solution,
+        faqs,
       } = req?.body;
       let project = await ProjectModel.findByIdAndUpdate(
         id,
@@ -155,9 +170,14 @@ class Projects extends Response {
                 level,
               }))
             : [],
-          gallery: gallery ? gallery.map((gal) => gal) : {},
+          gallery: gallery ? gallery.map((gal) => gal) : [],
           techStack,
-          projectLink,
+          projectLink: projectLink || "",
+          detailLayout: detailLayout === "showcase" ? "showcase" : "classic",
+          youtubeUrl: youtubeUrl || "",
+          problem: problem || { format: "paragraph", text: "", items: [] },
+          solution: solution || { format: "paragraph", text: "", items: [] },
+          faqs: Array.isArray(faqs) ? faqs : [],
         },
         { new: true }
       ).exec();
