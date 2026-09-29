@@ -23,6 +23,12 @@ const experience = mongoose.Schema({
     type: String,
     required: true,
   },
+  /** Owning developer — used by admin to show ownership */
+  devId: {
+    type: mongoose.Types.ObjectId,
+    ref: "Developer",
+    required: false,
+  },
 });
 
 const ExperiencesModel = mongoose.model("Experience", experience);
