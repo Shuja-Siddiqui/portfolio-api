@@ -146,7 +146,6 @@ class Educations extends Response {
           message: "Id is required to delete the education",
         });
       }
-      // Find the education by its id and delete it
       const deletedEducation = await EducationsModel.findOneAndDelete({
         _id: id,
       }).select("-__v");
@@ -156,6 +155,11 @@ class Educations extends Response {
           message: `No education found with the given Id ${id}`,
         });
       }
+      // Keep developer refs in sync
+      await DeveloperModel.updateMany(
+        { education: id },
+        { $pull: { education: id } }
+      );
       return this.sendResponse(req, res, {
         data: deletedEducation,
         status: 200,

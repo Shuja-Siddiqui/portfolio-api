@@ -145,7 +145,6 @@ class Experience extends Response {
           message: "Id is required to delete the experience",
         });
       }
-      // Find the experience by its id and delete it
       const deletedExperience = await ExperiencesModel.findOneAndDelete({
         _id: id,
       }).select("-__v");
@@ -155,6 +154,11 @@ class Experience extends Response {
           message: `No experience found with the given Id ${id}`,
         });
       }
+      // Keep developer refs in sync
+      await DeveloperModel.updateMany(
+        { experience: id },
+        { $pull: { experience: id } }
+      );
       return this.sendResponse(req, res, {
         data: deletedExperience,
         status: 200,
